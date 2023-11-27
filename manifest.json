@@ -12,5 +12,8 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icons/Spotify_icon.svg.png"
+  },
+  "background": {
+    "service_worker": "backend.js"
   }
 }
