@@ -1,3 +1,6 @@
 document.getElementById("signin").addEventListener('click', function(){
-    window.close();
+    chrome.runtime.sendMessage("signin", resp =>{
+        if (resp.message==="success")
+            console.log("signed in");
+    })
 });
