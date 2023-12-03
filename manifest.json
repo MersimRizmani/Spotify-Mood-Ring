@@ -16,5 +16,6 @@
   "background": {
     "service_worker": "backend.js"
   },
+  "host_permissions": ["https://api.genius.com/*"],
   "permissions": ["identity", "nativeMessaging"]
 }
