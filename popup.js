@@ -9,3 +9,18 @@ document.getElementById("signin").addEventListener('click', function(){
         }
     })
 });
+
+
+document.getElementById("analyze").addEventListener('click', function(){
+    chrome.runtime.sendMessage("analysis", resp =>{
+        if (resp.message==="success"){
+            console.log("Signed in");
+        }
+        else if (resp.message==="Not logged in"){
+            console.log("need to log in");
+        }
+        else{
+            console.log("Not available");
+        }
+    })
+});

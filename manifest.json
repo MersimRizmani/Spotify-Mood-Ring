@@ -16,6 +16,6 @@
   "background": {
     "service_worker": "backend.js"
   },
-  "host_permissions": ["https://api.genius.com/*"],
+  "host_permissions": ["https://api.genius.com/*", "https://api.spotify.com/*"],
   "permissions": ["identity", "nativeMessaging"]
 }
