@@ -12,5 +12,10 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icons/Spotify_icon.svg.png"
-  }
+  },
+  "background": {
+    "service_worker": "backend.js"
+  },
+  "host_permissions": ["https://api.genius.com/*"],
+  "permissions": ["identity", "nativeMessaging"]
 }
