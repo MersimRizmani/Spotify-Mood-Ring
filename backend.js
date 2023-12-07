@@ -5,7 +5,7 @@ const scope = "user-read-currently-playing"; //scope of api permissions, just re
 const authUrl = new URL("https://accounts.spotify.com/authorize"); //spotify auth url
 const show_dialog = "true"; // forces user approval everytime 
 let sp_token = "";  // auth token from implicit grant will be stored here
-const ge_token = ""; // get client api token from genius app
+const server_ip = "http://127.0.0.1:5000/" //Flask server link
 
 // Random state generator, adapted from spotify api documentation
 function generateRandomString(length){
@@ -29,40 +29,15 @@ async function spotify_read(){
     return data;
 }
 
-// search genius for song, if song isn't found "no hit" will be returned, else a json with the right song.
-async function geniusSearch(song, artist){
-    const resp = await fetch("https://api.genius.com/search?q="+song, {
-        method: "GET",
-        headers: {
-            'Accept': 'application/json',
-            "content-type": "application/json",
-            "Authorization": "Bearer "+ge_token
-        }
-    });
+// API to connect back to flask to perform analysis
+async function analysisFetch(song, artist){
+    data = {song:song, artist: artist};
+    const resp = await fetch(server_ip+"/analysis", {method: "POST", headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)});
     const output = await resp.json();
-    let out = "no hit";
-
-    // Looping through results to pull info, comparing artists to isolate
-    for (let hit in output["response"]["hits"]){
-        if (output["response"]["hits"][hit]["result"]["primary_artist"]["name"]==artist){
-            out = output["response"]["hits"][hit];
-            break;
-        }
-    }
-    return out
-}
-
-// Pulling link to song lyrics webpage via songs endpoint in genius
-async function geniusSong(endpoint){
-    const resp = await fetch("https://api.genius.com"+endpoint, {
-        method: "GET",
-        headers: {
-            "Authorization": "Bearer "+ge_token
-        }
-    });
-    const output = await resp.json();
-    lyrics_link = output["response"]["song"]["path"];
-    return lyrics_link
+    return output["link"]
 }
 
 // When sign in is clicked, the component script hits the service worker, runs this to start auth work
@@ -105,15 +80,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>{
         }
         else{
             // Series of chained api calls due to async nature and promises
-            // Goes spotify -> genius search -> genius song
-            spotify_read().then((data) => geniusSearch(data.item.name, data["item"]["artists"][0]["name"]).then((out) => {
-                // if there is no search hit, return, else pull song lyrics webpage via songs endpoint in genius
-                if (out==="no hit"){
-                    console.log("no hit");
-                    sendResponse("No hit");
+            // Goes spotify -> flask (genius search -> genius song info)
+            spotify_read().then((data) => analysisFetch(data.item.name, data["item"]["artists"][0]["name"]).then((out) => {
+                if (out==="None"){ 
+                    sendResponse("bad");
                 }
                 else{
-                    geniusSong(out.result.api_path).then(output => console.log(output))
+                    console.log(out);
+                    sendResponse("success");
                 }
             }));
         }
