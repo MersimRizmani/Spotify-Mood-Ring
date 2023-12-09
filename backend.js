@@ -16,7 +16,7 @@ function generateRandomString(length){
 
 // Pull current playing track from spotify, return in json
 async function spotify_read(){
-    const response = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+        const response = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
         method: "GET",
         headers: {
             'Accept': 'application/json',
@@ -32,12 +32,18 @@ async function spotify_read(){
 // API to connect back to flask to perform analysis
 async function analysisFetch(song, artist){
     data = {song:song, artist: artist};
-    const resp = await fetch(server_ip+"/analysis", {method: "POST", headers: {
+        const resp = await fetch(server_ip+"/analysis", {method: "POST", headers: {
         "Content-Type": "application/json"
     },
     body: JSON.stringify(data)});
-    const output = await resp.json();
-    return output["link"]
+
+    const output = await resp.json()
+    if (output?.error){
+        console.log(`err: ${output.error}`)
+        throw Error;
+    }
+
+    return output["lyrics"]
 }
 
 // When sign in is clicked, the component script hits the service worker, runs this to start auth work
