@@ -30,20 +30,28 @@ async function spotify_read(){
 }
 
 // API to connect back to flask to perform analysis
-async function analysisFetch(song, artist){
-    data = {song:song, artist: artist};
-        const resp = await fetch(server_ip+"/analysis", {method: "POST", headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)});
+async function analysisFetch(song, artist) {
+    const data = {song: song, artist: artist};
+    const resp = await fetch(server_ip + "/analysis", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
 
-    const output = await resp.json()
-    if (output?.error){
-        console.log(`err: ${output.error}`)
+    const output = await resp.json();
+    if (output?.error) {
+        console.log(`Error: ${output.error}`);
         throw Error;
-    }
+    } else {
+        // Display sentiment analysis results and cleaned lyrics
+        console.log("Sentiment Scores:", output.sentiment.sentiment_scores);
+        console.log("Sentiment:", output.sentiment.sentiment);
+        console.log("Cleaned Lyrics:", output.lyrics);
 
-    return output["lyrics"]
+        return output.sentiment.sentiment; // To be updated in the pop-up for UI
+    }
 }
 
 // When sign in is clicked, the component script hits the service worker, runs this to start auth work
@@ -84,18 +92,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>{
             console.log("Not logged in");
             sendResponse("Not logged in");
         }
-        else{
-            // Series of chained api calls due to async nature and promises
-            // Goes spotify -> flask (genius search -> genius song info)
-            spotify_read().then((data) => analysisFetch(data.item.name, data["item"]["artists"][0]["name"]).then((out) => {
-                if (out==="None"){ 
-                    sendResponse("bad");
-                }
-                else{
-                    console.log(out);
-                    sendResponse("success");
-                }
-            }));
+        else {
+            // Series of chained API calls due to async nature and promises
+            // Goes Spotify -> Flask (Genius search -> Genius song info)
+            spotify_read().then((data) =>
+                analysisFetch(data.item.name, data["item"]["artists"][0]["name"]).then((output) => {
+                    if (output["error"]) {
+                        console.log(`Error: ${output.error}`);
+                        sendResponse("bad");
+                    } else {
+                        sendResponse("success");
+                    }
+                })
+            );
         }
     }
     return true;

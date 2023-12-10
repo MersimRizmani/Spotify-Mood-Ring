@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import logging
 import requests
 import webbrowser
+from nltk.sentiment import SentimentIntensityAnalyzer
+import re
 
 app = Flask(__name__)
 
@@ -40,14 +42,15 @@ def get_song_link(song, artist):
 def extract_lyrics(lyrics_url):
     try:
         lyrics_response = requests.get("https://genius.com" + lyrics_url)
-        print('lyrics_response:' + str(lyrics_response.text))
         lyrics_response.raise_for_status()
         soup = BeautifulSoup(lyrics_response.text, "html.parser")
-        print('soup:' + str(soup))
+
+        # Remove content within square brackets to clean lyrics from Genius
+        for bracketed_text in soup.find_all(text=re.compile(r'\[.*?\]')):
+            bracketed_text.extract()
 
         lyrics_containers = soup.find_all("div", {"data-lyrics-container": "true"})
         lyrics = "\n".join(container.get_text("\n") for container in lyrics_containers) if lyrics_containers else "Lyrics not found"
-        print('lyrics:' + str(lyrics))
 
         return lyrics
     except requests.exceptions.RequestException as e:
@@ -57,6 +60,19 @@ def extract_lyrics(lyrics_url):
 def open_webpage(url):
     print('Opening link in browser with URL:', url)
     webbrowser.open(url)
+
+def analyze_lyrics_sentiment(lyrics):
+    sia = SentimentIntensityAnalyzer()
+    sentiment_scores = sia.polarity_scores(lyrics)
+    # Interpreting the overall sentiment
+    if sentiment_scores['compound'] >= 0.05:
+        sentiment = 'positive'
+    elif sentiment_scores['compound'] <= -0.05:
+        sentiment = 'negative'
+    else:
+        sentiment = 'neutral'
+
+    return {"sentiment_scores": sentiment_scores, "sentiment": sentiment}
 
 
 @app.route('/analysis', methods=["GET", "POST"])
@@ -75,7 +91,9 @@ def analyze():
         # Extract lyrics from the Genius webpage
         if lyrics_link is not None:
             lyrics = extract_lyrics(lyrics_link)
-            return {"link": lyrics_link, "lyrics": lyrics}
+            # Analyze sentiment of the cleaned lyrics
+            sentiment_result = analyze_lyrics_sentiment(lyrics)
+            return {"link": lyrics_link, "lyrics": lyrics, "sentiment": sentiment_result}
         else:
             return {"error": "Failed to get lyrics link"}
 
