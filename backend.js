@@ -32,18 +32,25 @@ function generateRandomString(length){
     return values.reduce((acc, x) => acc + possible[x % possible.length], "");
 };
 
-// Pull current playing track from spotify, return in json
+// Pull current playing track from spotify, return in json. If there is no output (i.e. song is not playing), return "no run" to trigger appropriate response
 async function spotify_read(){
-        const response = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+    var data = ""
+    await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
         method: "GET",
         headers: {
             'Accept': 'application/json',
             "content-type": "application/json",
             "Authorization": "Bearer "+sp_token
         }
+    }).then(response=>{
+        if (response.status===200){
+            const resp = response.json()
+            data = resp;
+        }
+        else if (response.status===204){
+            data = "no run";
+        }
     });
-    const resp = await response.json()
-    const data = resp;
     return data;
 }
 
@@ -61,7 +68,7 @@ async function analysisFetch(song, artist) {
     const output = await resp.json();
     if (output?.error) {
         console.log(`Error: ${output.error}`);
-        throw Error;
+        return "song not found"
     } else {
         // Display sentiment analysis results and cleaned lyrics
         console.log("Sentiment Scores:", output.sentiment.sentiment_scores);
@@ -104,30 +111,41 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>{
             }
         });
     }
+    else if (message==="popup"){
+        // If there is a token cached, confirm as logged in 
+        if (sp_token!=""){
+            sendResponse({message: "token"});
+        }
+    }
     else if (message==="analysis"){
         // If the user is authenticated in spotify, continue
         if (sp_token===""){
             console.log("Not logged in");
-            sendResponse("Not logged in");
+            sendResponse({message: "Not logged in"});
         }
         else {
             // Series of chained API calls due to async nature and promises
             // Goes Spotify -> Flask (Genius search -> Genius song info)
-            spotify_read().then((data) =>
-                analysisFetch(data.item.name, data["item"]["artists"][0]["name"]).then((output) => {
-                    if (output["error"]) {
-                        console.log(`Error: ${output.error}`);
-                        sendResponse({message: "bad"});
-                    } else {
-                        sendResponse(
-                            {
-                                message: "success",
-                                respData: data,
-                                score: output
-                            });
-                    }
-                })
-            );
+            spotify_read().then((data) =>{
+                if (data==="no run"){
+                    sendResponse({message: "Song not running"});
+                }
+                else{
+                    analysisFetch(data.item.name, data["item"]["artists"][0]["name"]).then((output) => {
+                        if (output==="song not found") {
+                            console.log(`Error: ${output.error}`);
+                            sendResponse({message: "Not available"});
+                        } else {
+                            sendResponse(
+                                {
+                                    message: "success",
+                                    respData: data,
+                                    score: output
+                                });
+                        }
+                    })
+                }
+            });
         }
     }
     return true;

@@ -4,7 +4,14 @@ import logging
 import requests
 import webbrowser
 from nltk.sentiment import SentimentIntensityAnalyzer
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
 import re
+import nltk
+nltk.download('vader_lexicon')
+nltk.download('stopwords')
+nltk.download('wordnet')
 
 app = Flask(__name__)
 
@@ -61,9 +68,16 @@ def open_webpage(url):
     print('Opening link in browser with URL:', url)
     webbrowser.open(url)
 
+# Preprocessing lyrics by NLP standards to aid Sentiment Analysis
+def preprocess_text(lyrics):
+    tokenized = word_tokenize(lyrics.lower())
+    filtered = [word for word in tokenized if word not in stopwords.words('english')]
+    lemmtized_output = " ".join([WordNetLemmatizer().lemmatize(word) for word in filtered])
+    return lemmtized_output
+
 def analyze_lyrics_sentiment(lyrics):
     sia = SentimentIntensityAnalyzer()
-    sentiment_scores = sia.polarity_scores(lyrics)
+    sentiment_scores = sia.polarity_scores(preprocess_text(lyrics))
     # Interpreting the overall sentiment
     if sentiment_scores['compound'] >= 0.05:
         sentiment = 'positive'
