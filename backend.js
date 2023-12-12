@@ -1,11 +1,29 @@
 // Spotify parameters needed for authorization
 const Client_id=""; //Enter App Client id for spotify here
-const redirect_uri = ""; //enter extension link, in format "https://<extension id>.chromiumapp.org/"
+const redirect_uri = "https://<extension-id>.chromiumapp.org/"; //enter extension link, in format "https://<extension id>.chromiumapp.org/"
 const scope = "user-read-currently-playing"; //scope of api permissions, just reading current track here
 const authUrl = new URL("https://accounts.spotify.com/authorize"); //spotify auth url
 const show_dialog = "true"; // forces user approval everytime 
 let sp_token = "";  // auth token from implicit grant will be stored here
 const server_ip = "http://127.0.0.1:5000/" //Flask server link
+
+function mapSentimentToColor(sentiment) {
+    // Ensure sentiment is within the range of -1 to 1
+    sentiment = Math.max(-1, Math.min(1, sentiment));
+  
+    // Map sentiment to a value between 0 and 1
+    const mappedValue = (sentiment + 1) / 2;
+  
+    // Interpolate between red (#ff0000) and green (#00ff00)
+    const red = Math.round((1 - mappedValue) * 255);
+    const green = Math.round(mappedValue * 255);
+    const blue = 0;
+
+    // Convert RGB values to a CSS color string
+    const color = `rgb(${red}, ${green}, ${blue})`;
+  
+    return color;
+  }
 
 // Random state generator, adapted from spotify api documentation
 function generateRandomString(length){
@@ -50,7 +68,7 @@ async function analysisFetch(song, artist) {
         console.log("Sentiment:", output.sentiment.sentiment);
         console.log("Cleaned Lyrics:", output.lyrics);
 
-        return output.sentiment.sentiment; // To be updated in the pop-up for UI
+        return output.sentiment.sentiment_scores; // To be updated in the pop-up for UI
     }
 }
 
@@ -99,9 +117,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>{
                 analysisFetch(data.item.name, data["item"]["artists"][0]["name"]).then((output) => {
                     if (output["error"]) {
                         console.log(`Error: ${output.error}`);
-                        sendResponse("bad");
+                        sendResponse({message: "bad"});
                     } else {
-                        sendResponse("success");
+                        sendResponse(
+                            {
+                                message: "success",
+                                respData: data,
+                                score: output
+                            });
                     }
                 })
             );

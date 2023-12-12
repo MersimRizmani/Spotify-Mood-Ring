@@ -1,5 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Signika&display=swap');
+
+h2 {
+  color: white;
+  font-family: 'Signika', sans-serif;
+  font-size: 5vh;
+}
+
 body {
-  width: 20rem;
-  height: 17rem;
-  background: lightgreen;
+  margin: 0;
+  display: flex;
+  flex-direction: column; 
+  min-width: 100vh;
+  min-height: 100vh;
+  justify-content:center;
+  align-items:center;
+  background: #1F1F1F;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#spotify-logo {
+  color: #1ED760;
+}
+
+.ring-container {
+  min-width: 50vh; /* Adjust the width as needed */
+  min-height: 50vh; /* Adjust the height as needed */
+  border: 70px solid #00f; /* Border thickness and color */
+  border-radius: 50%; /* Make it circular */
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-placeholder {
+  max-width: 150px;
+  max-height: 150px;
+}
+
+.ring-content {
+  color: white;
+  font-size: 16px; /* Adjust font size as needed */
+  font-family: 'Signika', sans-serif;
+  display: block;
+  max-width: 150px;
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center; /* Adjust as needed: space-between, space-around, etc. */
+  align-items: center;
+  margin-top: 3vh;
+  margin-bottom: 15vh;
+}
+
+button {
+  margin: 0 10px; /* Adjust the margin as needed */
+  border-radius: 20px; /* Set half of the button height for a pill shape */
+  background-color: #1ED760; /* Set the background color */
+  color: #1F1F1F; /* Set the text color */
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px; /* Adjust font size as needed */
+  font-family: 'Signika', sans-serif;
+  cursor: pointer;
+  min-width: 30vh;
+  min-height: 5vh;
 }

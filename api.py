@@ -13,7 +13,7 @@ ge_token = ""
 def get_song_link(song, artist):
     try:
         # First request to Genius API
-        search_response = requests.get("https://api.genius.com/search?q=" + song, headers={"Authorization": "Bearer " + ge_token})
+        search_response = requests.get("https://api.genius.com/search?q=" + song + " " + artist, headers={"Authorization": "Bearer " + ge_token})
         search_response.raise_for_status()  # Raise HTTPError for bad responses
         search_result = search_response.json()
 
@@ -79,9 +79,12 @@ def analyze_lyrics_sentiment(lyrics):
 def analyze():
     try:
         song = request.get_json()["song"]
+        print(song)
         artist = request.get_json()["artist"]
+        print(artist)
 
         lyrics_link = get_song_link(song, artist)
+        print(lyrics_link)
 
         if lyrics_link is not None and lyrics_link.startswith('/'):
             full_link = 'https://genius.com' + lyrics_link

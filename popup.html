@@ -6,12 +6,25 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="icon" type="icons/png" href="/icon-128.png" />
     <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css">
+</link>
   </head>
   <body>
-    <h2>Spotify Mood Ring</h2>
-    <button id="signin" >Sign in</button>
-    <button id="analyze" >Analyze</button>
+    <div class="header-container">
+      <i id="spotify-logo" class='fab fa-spotify fa-pull-left fa-spin fa-3x'></i>
+      <h2>Spotify Mood Ring</h2>
+    </div>
+    <div id="ring" class="ring-container">
+      <span class="ring-content">Currently Playing:</span>
+      <img class="image-placeholder" id="imgPlaceHolder" src="https://via.placeholder.com/150" alt="Image Placeholder">
+      <span class="ring-content" id="titlePlaceholder">N/A</span>
+    </div>
+    <div class="button-container">
+      <button id="signin" >Sign in</button>
+      <button id="analyze" >Analyze</button>
+    </div>
     <script src="./popup.js"></script>
+    <script src="./backend.js"></script>
   </body>
 </html>
 
