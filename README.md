@@ -115,3 +115,5 @@ Vish
 
 Sotheara
 - Extracted lyrics from currently playing song using BeautifulSoup web scraping to pass along the text data to the SentimentIntensityAnalyzer 
+
+### Video Demo Link: https://youtu.be/6sU9htZsPE0
