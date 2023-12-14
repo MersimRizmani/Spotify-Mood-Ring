@@ -49,5 +49,10 @@ This branch is essentially deprecated. The goal of this branch was to use a HTML
 
 The front end is made with HTML/CSS. We have two files here, popup.html and popup.css. This defines the structure and design of our front end for the extension.
 
-### JS Middleware
+#### JS Middleware
 
+This is seen in the popup.js file. This is where we have our handlers to perform actions, namely connecting to the Spotify API and server. The sign in handler connects to the spotify authorization API. The analyze handler calls the Spotify Web API and the server analysis endpoint. There is also a handler on load to check for existing auth tokens. We also have a backend.js file. This file is the manifest file for our extensions, allowing permissions for what actions can be taken and what hosts can be connected to. 
+
+#### Server
+
+This is seen in our.venv folder and our api.py file. The .venv folder holds all the python dependencies we need to run this server, and must be activated before running the api.py file. The api.py file acts as our server file. This is where we declare the Flask app and set up the analysis endpoint to perform webscraping and perform sentiment analysis. 
