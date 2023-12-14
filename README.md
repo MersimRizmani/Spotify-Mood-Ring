@@ -3,7 +3,7 @@ Chrome Extension to analyze a Spotify listener’s current mood based off of the
 
 ## Presentation Link:
 
-// Insert YouTube Link Here
+https://youtu.be/6sU9htZsPE0
 
 ## Dependencies
 
@@ -115,5 +115,3 @@ Vish
 
 Sotheara
 - Extracted lyrics from currently playing song using BeautifulSoup web scraping to pass along the text data to the SentimentIntensityAnalyzer 
-
-### Video Demo Link: https://youtu.be/6sU9htZsPE0
