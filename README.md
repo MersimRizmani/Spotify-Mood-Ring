@@ -28,7 +28,7 @@ Make sure to have a terminal open which is located in your folder with the api.p
 
   ```$ . .venv/bin/activate```
 
-	If you have any issues, refer to the Flask installation documentation: https://flask.palletsprojects.com/en/3.0.x/installation/
+If you have any issues, refer to the Flask installation documentation: https://flask.palletsprojects.com/en/3.0.x/installation/
 
 3. Run the Flask server; to do this run the following command:
 
