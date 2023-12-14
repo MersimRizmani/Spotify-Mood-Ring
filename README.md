@@ -26,9 +26,9 @@ Make sure to have a terminal open which is located in your folder with the api.p
 1. Clone the repo and open it in your preferred IDE or text editor
 2. Activate the virtual environment that is in the repo by opening a terminal and running the following command:
 
-  ```$ . .venv/bin/activate```
-
-If you have any issues, refer to the Flask installation documentation: https://flask.palletsprojects.com/en/3.0.x/installation/
+	  ```$ . .venv/bin/activate```
+	
+	If you have any issues, refer to the Flask installation documentation: https://flask.palletsprojects.com/en/3.0.x/installation/
 
 3. Run the Flask server; to do this run the following command:
 
