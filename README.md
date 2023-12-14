@@ -90,6 +90,18 @@ This is seen in the popup.js file. This is where we have our handlers to perform
 
 This is seen in our.venv folder and our api.py file. The .venv folder holds all the python dependencies we need to run this server, and must be activated before running the api.py file. The api.py file acts as our server file. This is where we declare the Flask app and set up the analysis endpoint to perform webscraping and perform sentiment analysis. 
 
+## Functions
+| Name  | Description
+| ------------- | ------------- |
+| spotify_read  | Get currently played song from Spotify  |
+| analysisFetch  | Call the api server with song title and artist to get sentiment  |
+| get_song_link  | Use Genius api to look up matched songs based on the title and artist name  |
+| extract_lyrics  | Use BeautifulSoup to go to genius website to extract the song lyrics from html body |
+| preprocess_text | Refine lyrics from genius website to aid Sentiment Analysis |
+| analyze_lyrics_sentiment  | Analyze sentiment of song lyrics  |
+
+
+
 ## Contributions
 
 Abhilash
