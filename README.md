@@ -84,7 +84,7 @@ The front end is made with HTML/CSS. We have two files here, popup.html and popu
 
 #### JS Middleware
 
-This is seen in the popup.js file. This is where we have our handlers to perform actions, namely connecting to the Spotify API and server. The sign in handler connects to the spotify authorization API. The analyze handler calls the Spotify Web API and the server analysis endpoint. There is also a handler on load to check for existing auth tokens. We also have a backend.js file. This file is the manifest file for our extensions, allowing permissions for what actions can be taken and what hosts can be connected to. 
+This is seen in the popup.js file. This is where we have our handlers to perform actions, namely allowing extension actions to connect to the Spotify API and server. The sign in handler allows the extension to  connect to the spotify authorization API. The analyze handler allows the extension to make calls to the Spotify Web API and the server analysis endpoint. There is also a handler on load to check for existing auth tokens. We also have a backend.js file. This file is the script used in the manifest file for our extensions, acting as the handlers connecting to the server and APIs. 
 
 #### Server
 
