@@ -3,7 +3,7 @@ Chrome Extension to analyze a Spotify listener’s current mood based off of the
 
 ## Presentation Link:
 
-<Insert YouTube Link Here>
+// Insert YouTube Link Here
 
 ## Dependencies
 
