@@ -21,6 +21,35 @@ You need to set up the chrome extension
 
 Make sure to have a terminal open which is located in your folder with the api.py file.
 
+## Running the Application
+
+1. Clone the repo and open it in your preferred IDE or text editor
+2. Activate the virtual environment that is in the repo by opening a terminal and running the following command:
+
+  ```$ . .venv/bin/activate```
+
+	If you have any issues, refer to the Flask installation documentation: https://flask.palletsprojects.com/en/3.0.x/installation/
+
+3. Run the Flask server; to do this run the following command:
+
+	```python api.py```
+
+4. Retrieve your Client ID for the Spotify API from the app you created on the Spotify for Developers site
+    1. Paste this on line 2 of backend.js in the code (should be commented //Enter App Client id for Spotify here)
+5. Retrieve the Client Access Token from the app you created in Genius
+    1. Paste this on Line 11 of api.py 
+6. Navigate to your Chrome Extensions
+    1. Select ‘Load Unpacked’
+    2. Select the repo folder
+    3. You can pin the extension to your Chrome toolbar for ease
+7. Copy the extension ID
+    1. Paste this extension ID on line 3 of backend.js (replacing the <extension-id> tag with your extension id)
+    2. Take this new URL and paste it into both the Spotify and Genius Redirect URI fields on the apps you created 
+    3. Reload your extension on the Chrome My Extensions page
+8. Open Spotify and play a song
+9. Open the extension, sign in, and analyze 
+    1. Important note: a song must be currently playing when you click Analyze
+
 ## Implementation Details
 
 ### Branches
@@ -56,3 +85,17 @@ This is seen in the popup.js file. This is where we have our handlers to perform
 #### Server
 
 This is seen in our.venv folder and our api.py file. The .venv folder holds all the python dependencies we need to run this server, and must be activated before running the api.py file. The api.py file acts as our server file. This is where we declare the Flask app and set up the analysis endpoint to perform webscraping and perform sentiment analysis. 
+
+## Contributions
+
+Abhilash
+- Implemented API authentication for calls to Spotify and Genius along with barebones Flask server for the backend
+
+Mersim
+- Designed user interface and connected frontend to backend in order to fetch sentiment scores and mapped the sentiment scores to a color on the mood ring. 
+
+Vish
+- Cleaned lyrics after it was scraped for the specific songs to only contain lyrics relevant to the content of the song. Used Vader NLTK for sentiment analysis to assign score based on if it was positive, neutral or negative and then finally an overall sentiment.
+
+Sotheara
+- Extracted lyrics from currently playing song using BeautifulSoup web scraping to pass along the text data to the SentimentIntensityAnalyzer 
